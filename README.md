@@ -87,7 +87,7 @@ let send_message_params = SendMessageParams::builder()
 ### Making requests
 
 ```rust,no_run
-#![cfg(feature = "client-ureq")]
+# #[cfg(feature = "client-ureq")] fn main() {
 use frankenstein::TelegramApi;
 use frankenstein::client_ureq::Bot;
 use frankenstein::methods::{GetUpdatesParams, SendMessageParams};
@@ -108,6 +108,8 @@ let update_params = GetUpdatesParams::builder()
     .allowed_updates(vec![AllowedUpdate::Message])
     .build();
 let result = bot.get_updates(&update_params);
+# }
+# #[cfg(not(feature = "client-ureq"))] fn main() {}
 ```
 
 Every function returns a `Result` with a successful response or failed response.
