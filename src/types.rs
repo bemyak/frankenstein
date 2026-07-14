@@ -435,7 +435,25 @@ pub struct ChatFullInfo {
     pub unique_gift_colors: Option<UniqueGiftColors>,
     pub paid_message_star_count: Option<u32>,
     pub guard_bot: Option<User>,
+    pub community: Option<Community>,
 }
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct Community {
+    pub id: i64,
+    pub name: String,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct CommunityChatAdded {
+    pub community: Community,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct CommunityChatRemoved {}
 
 #[apply(apistruct!)]
 pub struct Message {
@@ -527,6 +545,8 @@ pub struct Message {
     pub chat_background_set: Option<Box<ChatBackground>>,
     pub checklist_tasks_done: Option<Box<ChecklistTasksDone>>,
     pub checklist_tasks_added: Option<Box<ChecklistTasksAdded>>,
+    pub community_chat_added: Option<Box<CommunityChatAdded>>,
+    pub community_chat_removed: Option<Box<CommunityChatRemoved>>,
     pub direct_message_price_changed: Option<Box<DirectMessagePriceChanged>>,
     pub forum_topic_created: Option<Box<ForumTopicCreated>>,
     pub forum_topic_edited: Option<Box<ForumTopicEdited>>,
@@ -1930,6 +1950,20 @@ mod serde_tests {
 
         let member: ChatMember = serde_json::from_str(member_content).unwrap();
         assert!(matches!(member, ChatMember::Kicked(_)));
+    }
+
+    #[test]
+    pub fn community_chat_added_is_parsed() {
+        let content = r#"{
+            "community": {
+                "id": 123456789,
+                "name": "My Community"
+            }
+        }"#;
+
+        let added: CommunityChatAdded = serde_json::from_str(content).unwrap();
+        assert_eq!(added.community.id, 123456789);
+        assert_eq!(added.community.name, "My Community");
     }
 
     #[test]
