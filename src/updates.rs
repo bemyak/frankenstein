@@ -4,7 +4,9 @@ use serde::{Deserialize, Serialize};
 
 use crate::inline_mode::{ChosenInlineResult, InlineQuery};
 use crate::macros::{apistruct, apply};
-use crate::payments::{PaidMediaPurchased, PreCheckoutQuery, ShippingQuery};
+use crate::payments::{
+    BotSubscriptionUpdated, PaidMediaPurchased, PreCheckoutQuery, ShippingQuery,
+};
 use crate::types::{
     AllowedUpdate, BusinessConnection, BusinessMessagesDeleted, CallbackQuery, ChatBoostRemoved,
     ChatBoostUpdated, ChatJoinRequest, ChatMemberUpdated, ManagedBotUpdated, Message,
@@ -51,6 +53,7 @@ pub enum UpdateContent {
     RemovedChatBoost(ChatBoostRemoved),
     PurchasedPaidMedia(PaidMediaPurchased),
     ManagedBot(ManagedBotUpdated),
+    Subscription(BotSubscriptionUpdated),
 }
 
 #[apply(apistruct!)]
@@ -127,5 +130,24 @@ mod serde_tests {
         };
 
         assert_eq!(update, expected);
+    }
+
+    #[test]
+    pub fn subscription_update_is_parsed() {
+        let content = r#"{
+            "update_id": 100,
+            "subscription": {
+                "user": {
+                    "id": 1,
+                    "is_bot": false,
+                    "first_name": "First"
+                },
+                "invoice_payload": "payload",
+                "state": "canceled"
+            }
+        }"#;
+
+        let update: Update = serde_json::from_str(content).unwrap();
+        assert!(matches!(update.content, UpdateContent::Subscription(_)));
     }
 }

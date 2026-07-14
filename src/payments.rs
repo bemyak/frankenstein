@@ -227,3 +227,11 @@ pub struct StarAmount {
     pub amount: i32,
     pub nanostar_amount: Option<i32>,
 }
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct BotSubscriptionUpdated {
+    pub user: User,
+    pub invoice_payload: String,
+    pub state: String,
+}

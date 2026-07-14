@@ -341,6 +341,7 @@ pub enum AllowedUpdate {
     ChatBoost,
     RemovedChatBoost,
     ManagedBot,
+    Subscription,
 }
 
 #[apply(apistruct!)]
