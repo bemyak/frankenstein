@@ -429,6 +429,11 @@ where
     }
 
     request!(editMessageReplyMarkup, MessageOrBool);
+    request!(editEphemeralMessageText, bool);
+    request!(editEphemeralMessageMedia, bool);
+    request!(editEphemeralMessageCaption, bool);
+    request!(editEphemeralMessageReplyMarkup, bool);
+    request!(deleteEphemeralMessage, bool);
     request!(stopPoll, Poll);
     request!(approveSuggestedPost, bool);
     request!(declineSuggestedPost, bool);

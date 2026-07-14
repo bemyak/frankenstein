@@ -98,8 +98,9 @@ pub struct BotCommandScopeChatMember {
 #[apply(apistruct!)]
 #[derive(Eq)]
 pub struct ReplyParameters {
-    pub message_id: i32,
+    pub message_id: Option<i32>,
     pub chat_id: Option<ChatId>,
+    pub ephemeral_message_id: Option<i32>,
     pub allow_sending_without_reply: Option<bool>,
     pub quote: Option<String>,
     pub quote_parse_mode: Option<ParseMode>,
@@ -466,6 +467,8 @@ pub struct Message {
     pub sender_boost_count: Option<u32>,
     pub sender_business_bot: Option<Box<User>>,
     pub sender_tag: Option<String>,
+    pub receiver_user: Option<Box<User>>,
+    pub ephemeral_message_id: Option<i32>,
     pub date: u64,
     pub guest_query_id: Option<String>,
     pub business_connection_id: Option<String>,
@@ -1600,6 +1603,7 @@ pub struct ForumTopic {
 pub struct BotCommand {
     pub command: String,
     pub description: String,
+    pub is_ephemeral: Option<bool>,
 }
 
 #[apply(apistruct!)]
@@ -1965,6 +1969,35 @@ mod serde_tests {
         let added: CommunityChatAdded = serde_json::from_str(content).unwrap();
         assert_eq!(added.community.id, 123456789);
         assert_eq!(added.community.name, "My Community");
+    }
+
+    #[test]
+    pub fn ephemeral_message_fields_are_parsed() {
+        let content = r#"{
+            "message_id": 1,
+            "date": 1618207352,
+            "chat": {
+                "id": 275808073,
+                "type": "private"
+            },
+            "ephemeral_message_id": 42,
+            "receiver_user": {
+                "id": 7,
+                "is_bot": false,
+                "first_name": "Recv"
+            }
+        }"#;
+
+        let message: Message = serde_json::from_str(content).unwrap();
+        assert_eq!(message.ephemeral_message_id, Some(42));
+        assert_eq!(message.receiver_user.unwrap().id, 7);
+    }
+
+    #[test]
+    pub fn reply_parameters_omits_message_id_when_ephemeral() {
+        let params = ReplyParameters::builder().ephemeral_message_id(9).build();
+        let value = serde_json::to_value(&params).unwrap();
+        assert_eq!(value, serde_json::json!({ "ephemeral_message_id": 9 }));
     }
 
     #[test]

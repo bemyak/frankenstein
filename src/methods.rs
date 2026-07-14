@@ -54,6 +54,8 @@ pub struct SendMessageParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub text: String,
     pub parse_mode: Option<ParseMode>,
     pub entities: Option<Vec<MessageEntity>>,
@@ -162,6 +164,8 @@ pub struct SendPhotoParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub photo: FileUpload,
     pub caption: Option<String>,
     pub parse_mode: Option<ParseMode>,
@@ -184,6 +188,8 @@ pub struct SendAudioParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub audio: FileUpload,
     pub caption: Option<String>,
     pub parse_mode: Option<ParseMode>,
@@ -208,6 +214,8 @@ pub struct SendDocumentParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub document: FileUpload,
     pub thumbnail: Option<FileUpload>,
     pub caption: Option<String>,
@@ -230,6 +238,8 @@ pub struct SendVideoParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub video: FileUpload,
     pub duration: Option<u32>,
     pub width: Option<u32>,
@@ -259,6 +269,8 @@ pub struct SendAnimationParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub animation: FileUpload,
     pub duration: Option<u32>,
     pub width: Option<u32>,
@@ -285,6 +297,8 @@ pub struct SendVoiceParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub voice: FileUpload,
     pub caption: Option<String>,
     pub parse_mode: Option<ParseMode>,
@@ -306,6 +320,8 @@ pub struct SendVideoNoteParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub video_note: FileUpload,
     pub duration: Option<u32>,
     pub length: Option<u32>,
@@ -385,6 +401,8 @@ pub struct SendLocationParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub latitude: f64,
     pub longitude: f64,
     pub horizontal_accuracy: Option<f64>,
@@ -441,6 +459,8 @@ pub struct SendVenueParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub latitude: f64,
     pub longitude: f64,
     pub title: String,
@@ -465,6 +485,8 @@ pub struct SendContactParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub phone_number: String,
     pub first_name: String,
     pub last_name: Option<String>,
@@ -1126,6 +1148,58 @@ pub struct EditMessageReplyMarkupParams {
 
 #[apply(apistruct!)]
 #[derive(Eq)]
+pub struct EditEphemeralMessageTextParams {
+    pub chat_id: ChatId,
+    pub receiver_user_id: u64,
+    pub ephemeral_message_id: i32,
+    pub text: String,
+    pub parse_mode: Option<ParseMode>,
+    pub entities: Option<Vec<MessageEntity>>,
+    pub link_preview_options: Option<LinkPreviewOptions>,
+    pub reply_markup: Option<InlineKeyboardMarkup>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct EditEphemeralMessageMediaParams {
+    pub chat_id: ChatId,
+    pub receiver_user_id: u64,
+    pub ephemeral_message_id: i32,
+    pub media: InputMedia,
+    pub reply_markup: Option<InlineKeyboardMarkup>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct EditEphemeralMessageCaptionParams {
+    pub chat_id: ChatId,
+    pub receiver_user_id: u64,
+    pub ephemeral_message_id: i32,
+    pub caption: Option<String>,
+    pub parse_mode: Option<ParseMode>,
+    pub caption_entities: Option<Vec<MessageEntity>>,
+    pub reply_markup: Option<InlineKeyboardMarkup>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct EditEphemeralMessageReplyMarkupParams {
+    pub chat_id: ChatId,
+    pub receiver_user_id: u64,
+    pub ephemeral_message_id: i32,
+    pub reply_markup: Option<InlineKeyboardMarkup>,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
+pub struct DeleteEphemeralMessageParams {
+    pub chat_id: ChatId,
+    pub receiver_user_id: u64,
+    pub ephemeral_message_id: i32,
+}
+
+#[apply(apistruct!)]
+#[derive(Eq)]
 pub struct StopPollParams {
     pub business_connection_id: Option<String>,
     pub chat_id: ChatId,
@@ -1187,6 +1261,8 @@ pub struct SendStickerParams {
     pub chat_id: ChatId,
     pub message_thread_id: Option<i32>,
     pub direct_messages_topic_id: Option<i64>,
+    pub receiver_user_id: Option<u64>,
+    pub callback_query_id: Option<String>,
     pub sticker: FileUpload,
     pub emoji: Option<String>,
     pub disable_notification: Option<bool>,
